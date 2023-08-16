@@ -23,8 +23,9 @@ import java.util.Date;
 @ApiModel(description = "MgApp", value = "小程序实体VO")
 @NoArgsConstructor
 public class MgAppVo {
-    private static final long serialVersionUID = -35807319396443210L;
-
+    @ApiModelProperty(value = "id")
+    @TableId(value = "pid", type = IdType.AUTO)
+    private Integer pid;
 
     @ApiModelProperty(value = "微信小程序ID")
     @TableField(value = "app_id")

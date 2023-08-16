@@ -1,5 +1,6 @@
 package top.serms.hgm.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -100,8 +101,12 @@ public class MgAppController {
      */
     @PutMapping
     @ApiOperation("修改数据")
-    public Result updateById(@RequestBody MgApp mgApp) {
-        return Result.success(this.mgAppService.updateById(mgApp));
+    public Result updateById(@RequestBody MgAppVo mgApp) {
+        MgApp app = BeanUtil.copyProperties(mgApp, MgApp.class);
+        AccessTokenResponse tokenResponse = WechatApiUtil.requestAccessToken(mgApp.getAppId(), mgApp.getAppSecret());
+        app.setAccessToken(tokenResponse.getAccess_token());
+        app.setExpiresTime(tokenResponse.getExpires_in() * 1000 + System.currentTimeMillis());
+        return Result.success( this.mgAppService.updateById(app));
     }
 
     /**
@@ -110,7 +115,7 @@ public class MgAppController {
     @DeleteMapping
     @ApiOperation("单条/批量删除数据")
     public Result delete(@RequestParam List<Long> id) {
-        return Result.success(this.mgAppService.removeByIds(id));
+        return Result.success(this.mgAppService.removeByIdsSerMs(id));
     }
 }
 
