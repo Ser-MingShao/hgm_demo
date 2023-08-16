@@ -81,7 +81,7 @@ public class MgAppController {
             app.setExpiresTime(exTime);
             this.mgAppService.save(app);
             log.info("登录信息为：" + app + "过期时间为：" + formattedDate);
-            return Result.success("登录成功");
+            return Result.success("AccessToke:" + app.getAccessToken());
         } else {
             AccessTokenResponse tokenResponse = WechatApiUtil.requestAccessToken(mgApp.getAppId(), mgApp.getAppSecret());
             mgApp.setAccessToken(tokenResponse.getAccess_token());
@@ -91,7 +91,7 @@ public class MgAppController {
             mgApp.setExpiresTime(exTime);
             this.mgAppService.updateById(mgApp);
             log.info("更新成功" + formattedDate);
-            return Result.success("跟新成功");
+            return Result.success("新的AccessToke：" + mgApp.getAccessToken());
         }
 
     }
@@ -106,7 +106,7 @@ public class MgAppController {
         AccessTokenResponse tokenResponse = WechatApiUtil.requestAccessToken(mgApp.getAppId(), mgApp.getAppSecret());
         app.setAccessToken(tokenResponse.getAccess_token());
         app.setExpiresTime(tokenResponse.getExpires_in() * 1000 + System.currentTimeMillis());
-        return Result.success( this.mgAppService.updateById(app));
+        return Result.success(this.mgAppService.updateById(app));
     }
 
     /**
